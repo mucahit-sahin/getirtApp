@@ -1,5 +1,6 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet, View, Text, StatusBar} from 'react-native';
+import SignNavigation from './Navigations/SignNavigation';
 import Login from './Screens/Login';
 import Signup from './Screens/Signup';
 
@@ -8,7 +9,7 @@ const App = () => {
     <>
       <StatusBar barStyle="dark-content" />
       {/* <Login /> */}
-      <Signup />
+      <SignNavigation />
     </>
   );
 };

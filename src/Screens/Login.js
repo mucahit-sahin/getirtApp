@@ -11,7 +11,7 @@ import {
 
 const width = Dimensions.get('window').width;
 
-const Login = () => {
+const Login = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.container}>
@@ -36,7 +36,7 @@ const Login = () => {
         </TouchableOpacity>
         <View style={styles.sign}>
           <Text>Bir hesabın yok mu?</Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
             <Text style={styles.signText}>Üye ol.</Text>
           </TouchableOpacity>
         </View>
