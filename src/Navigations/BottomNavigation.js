@@ -5,17 +5,46 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import Orders from '../Screens/Orders';
 import Profile from '../Screens/Profile';
-import Login from '../Screens/Login';
+import Home from '../Screens/Home';
+
+import PackageIcon from '../Components/icons/Package';
+import HomeIcon from '../Components/icons/Home';
+import ProfileIcon from '../Components/icons/User';
 
 const Tab = createBottomTabNavigator();
 
 const BottomNavigation = () => {
   return (
     <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Orders" component={Orders} />
-        <Tab.Screen name="Login" component={Login} />
-        <Tab.Screen name="Profile" component={Profile} />
+      <Tab.Navigator initialRouteName="Home">
+        <Tab.Screen
+          name="Orders"
+          component={Orders}
+          options={{
+            tabBarIcon: ({color, size}) => (
+              <PackageIcon name="Orders" color={color} size={size} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Home"
+          component={Home}
+          options={{
+            tabBarLabel: '',
+            tabBarIcon: ({color, size}) => (
+              <HomeIcon name="Home" color={color} size={size} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Profile"
+          component={Profile}
+          options={{
+            tabBarIcon: ({color, size}) => (
+              <ProfileIcon name="Profile" color={color} size={size} />
+            ),
+          }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );
