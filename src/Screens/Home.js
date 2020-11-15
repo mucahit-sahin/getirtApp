@@ -1,13 +1,20 @@
 import React from 'react';
-import {StyleSheet, Text, View, Dimensions} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
 
 import KuryeIcon from '../Components/icons/Kurye';
 import SiparisIcon from '../Components/icons/Siparis';
+import CreateShoopingCart from './CreateShoopingCart';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const Home = () => {
+const Home = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -17,10 +24,12 @@ const Home = () => {
         <KuryeIcon width={100} />
         <Text style={styles.cardText}>Biraz para kazanmaya ne dersin?</Text>
       </View>
-      <View style={styles.siparisVerCard}>
+      <TouchableOpacity
+        style={styles.siparisVerCard}
+        onPress={() => navigation.navigate('CreateShoopingCart')}>
         <SiparisIcon width={100} />
         <Text style={styles.cardText}>Sipariş mi vermek istiyorsun?</Text>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };
