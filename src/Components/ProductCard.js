@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 
-const ProductCard = ({productName}) => {
+const ProductCard = ({productName, productWeight, productQuantity}) => {
   return (
     <View style={styles.container}>
       <View style={styles.productHeader}>
@@ -9,16 +9,18 @@ const ProductCard = ({productName}) => {
       </View>
       <View style={styles.numbers}>
         <View style={styles.circle}>
-          <Text style={styles.circleText}>100</Text>
+          <Text style={styles.circleText}>{productWeight}</Text>
           <Text style={styles.circleText}>gr</Text>
         </View>
         <View style={styles.circle}>
-          <Text style={styles.circleText}>2</Text>
+          <Text style={styles.circleText}>{productQuantity}</Text>
           <Text style={styles.circleText}>Adet</Text>
         </View>
         <View style={styles.circle}>
-          <Text style={styles.circleText}>2</Text>
-          <Text style={styles.circleText}>Adet</Text>
+          <Text style={styles.circleText}>
+            {parseFloat(productQuantity) * parseFloat(productWeight)}
+          </Text>
+          <Text style={styles.circleText}>Toplam gr</Text>
         </View>
       </View>
     </View>
