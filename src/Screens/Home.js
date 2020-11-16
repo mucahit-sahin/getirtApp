@@ -5,18 +5,17 @@ import {
   View,
   Dimensions,
   TouchableOpacity,
+  SafeAreaView,
 } from 'react-native';
 
 import KuryeIcon from '../Components/icons/Kurye';
 import SiparisIcon from '../Components/icons/Siparis';
-import CreateShoopingCart from './CreateShoopingCart';
 
-const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const Home = ({navigation}) => {
   return (
-    <View style={styles.container}>
+    <View as={SafeAreaView} style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Baslık yada Logo</Text>
       </View>
@@ -42,7 +41,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#a3c0e1',
+    backgroundColor: '#8ee000',
     height: windowHeight * 0.35,
     borderBottomStartRadius: 20,
     borderBottomEndRadius: 20,
@@ -50,7 +49,7 @@ const styles = StyleSheet.create({
   kuryeCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#dabc50',
+    backgroundColor: '#a560e8',
     margin: 10,
     padding: 10,
     borderRadius: 10,
@@ -59,7 +58,7 @@ const styles = StyleSheet.create({
   siparisVerCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#09979c',
+    backgroundColor: '#ffc715',
     margin: 10,
     padding: 10,
     borderRadius: 10,
