@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import Orders from '../Screens/Orders';
+import MyOrders from '../Screens/MyOrders';
 import Profile from '../Screens/Profile';
 import HomeStackScreen from '../Navigations/HomeStack';
 
@@ -18,11 +18,11 @@ const BottomNavigation = () => {
     <NavigationContainer>
       <Tab.Navigator initialRouteName="Home">
         <Tab.Screen
-          name="Orders"
-          component={Orders}
+          name="Siparişlerim"
+          component={MyOrders}
           options={{
             tabBarIcon: ({color, size}) => (
-              <PackageIcon name="Orders" color={color} size={size} />
+              <PackageIcon name="MyOrders" color={color} size={size} />
             ),
           }}
         />
@@ -37,7 +37,7 @@ const BottomNavigation = () => {
           }}
         />
         <Tab.Screen
-          name="Profile"
+          name="Profil"
           component={Profile}
           options={{
             tabBarIcon: ({color, size}) => (
