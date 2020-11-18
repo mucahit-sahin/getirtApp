@@ -26,7 +26,7 @@ const Login = ({navigation}) => {
         </View>
         <View style={styles.forget}>
           <TouchableOpacity>
-            <Text style={styles.forgetText}>Forget Password</Text>
+            <Text style={styles.forgetText}>Şifremi Unuttum</Text>
           </TouchableOpacity>
         </View>
         <TouchableOpacity>

@@ -4,6 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import Home from '../Screens/Home';
 import CreateShoopingCart from '../Screens/CreateShoopingCart';
+import Orders from '../Screens/Orders';
 
 const HomeStack = createStackNavigator();
 
@@ -18,6 +19,12 @@ function HomeStackScreen() {
       <HomeStack.Screen
         name="CreateShoopingCart"
         component={CreateShoopingCart}
+        options={{headerShown: false}}
+      />
+      <HomeStack.Screen
+        name="Orders"
+        component={Orders}
+        options={{headerShown: false}}
       />
     </HomeStack.Navigator>
   );

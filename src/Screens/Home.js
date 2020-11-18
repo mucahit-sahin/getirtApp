@@ -19,10 +19,12 @@ const Home = ({navigation}) => {
       <View style={styles.header}>
         <Text style={styles.headerText}>Baslık yada Logo</Text>
       </View>
-      <View style={styles.kuryeCard}>
+      <TouchableOpacity
+        style={styles.kuryeCard}
+        onPress={() => navigation.navigate('Orders')}>
         <KuryeIcon width={100} />
         <Text style={styles.cardText}>Biraz para kazanmaya ne dersin?</Text>
-      </View>
+      </TouchableOpacity>
       <TouchableOpacity
         style={styles.siparisVerCard}
         onPress={() => navigation.navigate('CreateShoopingCart')}>

@@ -16,7 +16,6 @@ const Signup = ({navigation}) => {
       <View></View>
       <View>
         <TextInput style={styles.text} placeholder="Email" />
-        <TextInput style={styles.text} placeholder="Display Name" />
         <TextInput style={styles.text} placeholder="Username" />
         <TextInput
           style={styles.text}
@@ -30,7 +29,7 @@ const Signup = ({navigation}) => {
         </TouchableOpacity>
       </View>
       <View style={styles.login}>
-        <Text>Have an account?</Text>
+        <Text>Bir Hesabın var mı?</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
           <Text style={styles.loginText}>Login</Text>
         </TouchableOpacity>
