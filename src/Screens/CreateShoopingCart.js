@@ -12,6 +12,8 @@ import {
 } from 'react-native';
 import ProductCard from '../Components/ProductCard';
 
+import Colors from '../Utils/Colors';
+
 const windowWidth = Dimensions.get('window').width;
 
 const CreateShoopingCart = ({navigation}) => {
@@ -101,7 +103,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   inputs: {
-    backgroundColor: '#8ee000',
+    backgroundColor: Colors.yesil,
     borderBottomStartRadius: 30,
     borderBottomEndRadius: 30,
     padding: 10,
@@ -126,7 +128,7 @@ const styles = StyleSheet.create({
   shoppingList: {margin: 10, borderRadius: 10},
   totalView: {
     height: windowWidth / 8,
-    backgroundColor: '#8ee000',
+    backgroundColor: Colors.yesil,
     borderTopEndRadius: 50,
     borderTopStartRadius: 50,
     alignItems: 'center',

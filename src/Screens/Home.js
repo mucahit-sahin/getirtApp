@@ -11,6 +11,8 @@ import {
 import KuryeIcon from '../Components/icons/Kurye';
 import SiparisIcon from '../Components/icons/Siparis';
 
+import Colors from '../Utils/Colors';
+
 const windowHeight = Dimensions.get('window').height;
 
 const Home = ({navigation}) => {
@@ -43,7 +45,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#8ee000',
+    backgroundColor: Colors.yesil,
     height: windowHeight * 0.35,
     borderBottomStartRadius: 20,
     borderBottomEndRadius: 20,
@@ -51,7 +53,7 @@ const styles = StyleSheet.create({
   kuryeCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#a560e8',
+    backgroundColor: Colors.mor,
     margin: 10,
     padding: 10,
     borderRadius: 10,
@@ -60,7 +62,7 @@ const styles = StyleSheet.create({
   siparisVerCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#ffc715',
+    backgroundColor: Colors.turuncu,
     margin: 10,
     padding: 10,
     borderRadius: 10,

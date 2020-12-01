@@ -12,6 +12,8 @@ import {
 } from 'react-native';
 import ProductCard from '../Components/ProductCard';
 
+import Colors from '../Utils/Colors';
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -86,7 +88,7 @@ const styles = StyleSheet.create({
   container: {flexDirection: 'column'},
   header: {
     flexDirection: 'row',
-    backgroundColor: '#8ee000',
+    backgroundColor: Colors.yesil,
     height: windowHeight / 10,
     borderBottomEndRadius: 30,
     borderBottomStartRadius: 30,
@@ -96,7 +98,7 @@ const styles = StyleSheet.create({
   headerText: {color: 'white', fontWeight: 'bold'},
   inputs: {
     flexDirection: 'column',
-    backgroundColor: '#8ee000',
+    backgroundColor: Colors.yesil,
     marginTop: 10,
     marginHorizontal: 10,
     borderRadius: 10,
@@ -150,7 +152,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#8ee000',
+    backgroundColor: Colors.yesil,
     height: 60,
     borderTopEndRadius: 30,
     borderTopStartRadius: 30,

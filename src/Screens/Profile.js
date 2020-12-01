@@ -1,6 +1,8 @@
 import React from 'react';
 import {StyleSheet, Text, View, Dimensions, Image} from 'react-native';
 
+import Colors from '../Utils/Colors';
+
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 
@@ -41,7 +43,7 @@ const styles = StyleSheet.create({
   container: {flexDirection: 'column'},
   profileImageView: {
     height: windowHeight / 3,
-    backgroundColor: '#8ee000',
+    backgroundColor: Colors.yesil,
     width: windowWidth,
     borderBottomEndRadius: windowWidth / 2,
     borderBottomStartRadius: windowWidth / 2,
@@ -62,7 +64,7 @@ const styles = StyleSheet.create({
   },
   aboutRow: {
     height: windowHeight / 16,
-    backgroundColor: '#8ee000',
+    backgroundColor: Colors.yesil,
     borderRadius: 10,
     marginBottom: 1,
     alignItems: 'center',
@@ -74,7 +76,7 @@ const styles = StyleSheet.create({
   },
   aboutAdres: {
     height: windowHeight / 4,
-    backgroundColor: '#8ee000',
+    backgroundColor: Colors.yesil,
     borderRadius: 10,
     marginBottom: 1,
     alignItems: 'center',

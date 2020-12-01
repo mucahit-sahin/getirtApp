@@ -9,10 +9,12 @@ import {
 } from 'react-native';
 import OrderCard from '../Components/OrderCard';
 
+import Colors from '../Utils/Colors';
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const Orders = () => {
+const Orders = ({navigation}) => {
   return (
     <View as={SafeAreaView} style={styles.container}>
       <View style={styles.header}>
@@ -25,6 +27,7 @@ const Orders = () => {
           ilce="Arnavutköy"
           orderWeight={3.5}
           price={12}
+          onPress={() => navigation.navigate('OrderDetails')}
         />
         <OrderCard
           userName="mucahitsah"
@@ -32,6 +35,7 @@ const Orders = () => {
           ilce="Arnavutköy"
           orderWeight={3.5}
           price={12}
+          onPress={() => navigation.navigate('OrderDetails')}
         />
         <OrderCard
           userName="mucahitsah"
@@ -39,6 +43,7 @@ const Orders = () => {
           ilce="Arnavutköy"
           orderWeight={3.5}
           price={12}
+          onPress={() => navigation.navigate('OrderDetails')}
         />
         <OrderCard
           userName="mucahitsah"
@@ -46,6 +51,7 @@ const Orders = () => {
           ilce="Arnavutköy"
           orderWeight={3.5}
           price={12}
+          onPress={() => navigation.navigate('OrderDetails')}
         />
         <OrderCard
           userName="mucahitsah"
@@ -53,6 +59,7 @@ const Orders = () => {
           ilce="Arnavutköy"
           orderWeight={3.5}
           price={12}
+          onPress={() => navigation.navigate('OrderDetails')}
         />
         <OrderCard
           userName="mucahitsah"
@@ -60,6 +67,7 @@ const Orders = () => {
           ilce="Arnavutköy"
           orderWeight={3.5}
           price={12}
+          onPress={() => navigation.navigate('OrderDetails')}
         />
       </ScrollView>
     </View>
@@ -72,7 +80,7 @@ const styles = StyleSheet.create({
   container: {flexDirection: 'column'},
   header: {
     flexDirection: 'row',
-    backgroundColor: '#a560e8',
+    backgroundColor: Colors.mor,
     height: windowHeight / 10,
     borderBottomEndRadius: 30,
     borderBottomStartRadius: 30,
