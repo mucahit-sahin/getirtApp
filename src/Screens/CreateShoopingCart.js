@@ -14,7 +14,7 @@ import ProductCard from '../Components/ProductCard';
 
 const windowWidth = Dimensions.get('window').width;
 
-const CreateShoopingCart = () => {
+const CreateShoopingCart = ({navigation}) => {
   const [productName, setProductName] = React.useState('');
   const [productWeight, setProductWeight] = React.useState('');
   const [productQuantity, setProductQuantity] = React.useState('');
@@ -77,7 +77,9 @@ const CreateShoopingCart = () => {
         />
       </ScrollView>
       {products.length > 0 ? (
-        <TouchableOpacity style={styles.totalView}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('ConfirmOrder', {data: products})}
+          style={styles.totalView}>
           <Text style={styles.totalViewText}>Sepeti Onayla</Text>
         </TouchableOpacity>
       ) : (
