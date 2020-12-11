@@ -15,33 +15,25 @@ import Colors from '../Utils/Colors';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const MyOrders = () => {
+const MyOrders = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Siparişlerim</Text>
       </View>
       <ScrollView style={styles.orders}>
-        <MyOrderCard username="mucahitsah" orderWeight={7.5} orderPrice={11} />
-        <MyCourierCard
+        <MyOrderCard
           username="mucahitsah"
           orderWeight={7.5}
           orderPrice={11}
-        />
-        <MyOrderCard username="mucahitsah" orderWeight={7.5} orderPrice={11} />
-        <MyOrderCard username="mucahitsah" orderWeight={7.5} orderPrice={11} />
-        <MyCourierCard
-          username="mucahitsah"
-          orderWeight={7.5}
-          orderPrice={11}
+          onPress={() => navigation.navigate('MyOrderDetails')}
         />
         <MyCourierCard
           username="mucahitsah"
           orderWeight={7.5}
           orderPrice={11}
+          onPress={() => navigation.navigate('MyCourierDetails')}
         />
-        <MyOrderCard username="mucahitsah" orderWeight={7.5} orderPrice={11} />
-        <MyOrderCard username="mucahitsah" orderWeight={7.5} orderPrice={11} />
       </ScrollView>
     </SafeAreaView>
   );
