@@ -1,6 +1,7 @@
 import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
+import Colors from '../Utils/Colors';
 const OrderCard = ({
   userName,
   userImage,
@@ -8,9 +9,10 @@ const OrderCard = ({
   ilce,
   orderWeight,
   price,
+  onPress,
 }) => {
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity onPress={onPress} style={styles.container}>
       <View style={styles.header}>
         <Image
           style={styles.profileImage}
