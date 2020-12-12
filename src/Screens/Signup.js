@@ -7,22 +7,41 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
+import {AuthContext} from '../Navigations/AuthProvider';
 
 const width = Dimensions.get('window').width;
 
 const Signup = ({navigation}) => {
+  const [email, setEmail] = React.useState(null);
+  const [password, setPassword] = React.useState(null);
+  const [confirmPassword, setConfirmPassword] = React.useState(null);
+
+  const {register} = React.useContext(AuthContext);
+
   return (
     <View style={styles.container}>
       <View></View>
       <View>
-        <TextInput style={styles.text} placeholder="Email" />
-        <TextInput style={styles.text} placeholder="Username" />
+        <TextInput
+          style={styles.text}
+          placeholder="Email"
+          onChangeText={(userEmail) => setEmail(userEmail)}
+        />
         <TextInput
           style={styles.text}
           placeholder="Password"
+          onChangeText={(userPassword) => setPassword(userPassword)}
           secureTextEntry={true}
         />
-        <TouchableOpacity>
+        <TextInput
+          style={styles.text}
+          placeholder="Confirm Password"
+          onChangeText={(userConfirmPassword) =>
+            setConfirmPassword(userConfirmPassword)
+          }
+          secureTextEntry={true}
+        />
+        <TouchableOpacity onPress={() => register(email, password)}>
           <View style={styles.signup}>
             <Text style={styles.signupText}>Üye Ol</Text>
           </View>

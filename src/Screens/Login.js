@@ -8,10 +8,13 @@ import {
   TouchableOpacity,
   Button,
 } from 'react-native';
+import {AuthContext} from '../Navigations/AuthProvider';
 
 const width = Dimensions.get('window').width;
 
 const Login = ({navigation}) => {
+  const {login} = React.useContext(AuthContext);
+
   return (
     <View style={styles.container}>
       <View style={styles.container}>
@@ -29,7 +32,7 @@ const Login = ({navigation}) => {
             <Text style={styles.forgetText}>Şifremi Unuttum</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => login(email, password)}>
           <View style={styles.login}>
             <Text style={styles.loginText}>Giriş Yap</Text>
           </View>
