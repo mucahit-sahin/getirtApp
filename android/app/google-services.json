@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "275605510499",
+    "firebase_url": "https://getirt-app.firebaseio.com",
+    "project_id": "getirt-app",
+    "storage_bucket": "getirt-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:275605510499:android:77cd351cf18978d27a5b56",
+        "android_client_info": {
+          "package_name": "com.getirtapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "275605510499-505irmke737hvf1201tq1g95djnk2hsa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoI5YEVbbud2G4Yk0Q6-s1vVluwnXiQwk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "275605510499-505irmke737hvf1201tq1g95djnk2hsa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
