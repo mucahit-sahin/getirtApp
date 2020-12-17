@@ -13,6 +13,9 @@ import {AuthContext} from '../Navigations/AuthProvider';
 const width = Dimensions.get('window').width;
 
 const Login = ({navigation}) => {
+  const [email, setEmail] = React.useState(null);
+  const [password, setPassword] = React.useState(null);
+
   const {login} = React.useContext(AuthContext);
 
   return (
@@ -20,10 +23,15 @@ const Login = ({navigation}) => {
       <View style={styles.container}>
         <View></View>
         <View>
-          <TextInput style={styles.text} placeholder="Username" />
+          <TextInput
+            style={styles.text}
+            placeholder="Email"
+            onChangeText={(userEmail) => setEmail(userEmail)}
+          />
           <TextInput
             style={styles.text}
             placeholder="Password"
+            onChangeText={(userPassword) => setPassword(userPassword)}
             secureTextEntry={true}
           />
         </View>
