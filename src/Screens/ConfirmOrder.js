@@ -3,7 +3,6 @@ import {
   StyleSheet,
   Text,
   View,
-  Dimensions,
   TextInput,
   ScrollView,
   FlatList,
@@ -13,9 +12,6 @@ import {
 import ProductCard from '../Components/ProductCard';
 
 import Colors from '../Utils/Colors';
-
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 
 const ConfirmOrder = ({route}) => {
   const {data} = route.params;

@@ -3,7 +3,6 @@ import {
   StyleSheet,
   Text,
   View,
-  Dimensions,
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
@@ -12,8 +11,6 @@ import {
 import ProductCard from '../Components/ProductCard';
 import Colors from '../Utils/Colors';
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 const MyOrderDetails = () => {
   const confirmSure = () =>
     Alert.alert(
