@@ -18,7 +18,7 @@ const MyCourierDetails = () => {
   const confirmSure = () =>
     Alert.alert(
       'Emin misin?',
-      'Siparişinizin size ulaştığını onaylıyor musunuz?',
+      'Siparişi bir sonraki aşamaya geçirmek istiyor musunuz?',
       [
         {
           text: 'Hayır',
@@ -135,7 +135,7 @@ const MyCourierDetails = () => {
           </ScrollView>
         </View>
         <TouchableOpacity style={styles.orderCompletion} onPress={confirmSure}>
-          <Text style={{color: 'white'}}>Siparişin Geldigini Onayla</Text>
+          <Text style={{color: 'white'}}>Sipariş Durumunu Değiştir</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -145,10 +145,10 @@ const MyCourierDetails = () => {
 export default MyCourierDetails;
 
 const styles = StyleSheet.create({
-  container: {flexDirection: 'column'},
+  container: {flexDirection: 'column', flex: 1},
   header: {
     flexDirection: 'row',
-    height: windowHeight / 10,
+    flex: 0.1,
     borderBottomEndRadius: 30,
     borderBottomStartRadius: 30,
     alignItems: 'center',
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     margin: 5,
     padding: 5,
     backgroundColor: Colors.mor,
-    height: windowHeight / 1.3,
+    flex: 0.9,
     borderRadius: 10,
     padding: 10,
   },

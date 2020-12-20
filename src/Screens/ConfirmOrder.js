@@ -85,15 +85,15 @@ const ConfirmOrder = ({route}) => {
 export default ConfirmOrder;
 
 const styles = StyleSheet.create({
-  container: {flexDirection: 'column'},
+  container: {flexDirection: 'column', flex: 1},
   header: {
     flexDirection: 'row',
     backgroundColor: Colors.yesil,
-    height: windowHeight / 10,
     borderBottomEndRadius: 30,
     borderBottomStartRadius: 30,
     alignItems: 'center',
     justifyContent: 'center',
+    flex: 0.1,
   },
   headerText: {color: 'white', fontWeight: 'bold'},
   inputs: {
@@ -102,8 +102,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginHorizontal: 10,
     borderRadius: 10,
-    height: windowHeight / 1.4,
     padding: 10,
+    flex: 0.8,
   },
   info: {flexDirection: 'column', flex: 1},
   infoText: {
@@ -145,7 +145,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: 'white',
     marginVertical: 10,
-    height: windowHeight / 1.4 / 3,
   },
   publishOrder: {
     flexDirection: 'row',
@@ -153,9 +152,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: Colors.yesil,
-    height: 60,
     borderTopEndRadius: 30,
     borderTopStartRadius: 30,
+    flex: 0.1,
   },
   publishText: {color: 'white', fontWeight: 'bold'},
 });

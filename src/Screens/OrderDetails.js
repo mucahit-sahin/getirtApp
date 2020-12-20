@@ -23,11 +23,15 @@ const OrderDetails = () => {
       </View>
       <ScrollView style={styles.productDetails} nestedScrollEnabled={true}>
         <View style={styles.productUser}>
-          <Image
-            style={styles.profileImage}
-            source={require('../Assets/user.png')}
-          />
-          <Text style={styles.productText}>username</Text>
+          <View style={{flex: 0.2, alignItems: 'center'}}>
+            <Image
+              style={styles.profileImage}
+              source={require('../Assets/user.png')}
+            />
+          </View>
+          <View style={{flex: 0.8, alignItems: 'center'}}>
+            <Text style={styles.productText}>username</Text>
+          </View>
         </View>
         <View style={styles.productDescription}>
           <Text>Açıklama</Text>
@@ -83,26 +87,26 @@ const OrderDetails = () => {
 export default OrderDetails;
 
 const styles = StyleSheet.create({
-  container: {flexDirection: 'column'},
+  container: {flexDirection: 'column', flex: 1},
   header: {
     flexDirection: 'row',
-    height: windowHeight / 10,
     borderBottomEndRadius: 30,
     borderBottomStartRadius: 30,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: Colors.mor,
+    flex: 0.1,
   },
   headerText: {color: 'white', fontWeight: 'bold'},
   productDetails: {
     margin: 5,
     padding: 5,
     backgroundColor: Colors.mor,
-    height: windowHeight / 1.4,
+    flex: 0.8,
     borderRadius: 10,
   },
   productText: {color: 'white', fontSize: 30, justifyContent: 'center'},
-  productUser: {flexDirection: 'row'},
+  productUser: {flexDirection: 'row', marginVertical: 5},
   profileImage: {height: 50, width: 50},
   productDescription: {
     padding: 5,
@@ -129,9 +133,9 @@ const styles = StyleSheet.create({
   },
   confirmOrder: {
     backgroundColor: Colors.mor,
+    flex: 0.1,
     alignItems: 'center',
     justifyContent: 'center',
-    height: 60,
     borderTopEndRadius: 30,
     borderTopStartRadius: 30,
   },

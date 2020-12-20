@@ -125,14 +125,14 @@ const styles = StyleSheet.create({
     width: windowWidth / 3,
   },
   buttonText: {color: 'white'},
-  shoppingList: {margin: 10, borderRadius: 10},
+  shoppingList: {margin: 10, borderRadius: 10, flex: 0.65},
   totalView: {
-    height: windowWidth / 8,
     backgroundColor: Colors.yesil,
     borderTopEndRadius: 50,
     borderTopStartRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
+    flex: 0.1,
   },
   totalViewText: {color: 'white', fontWeight: 'bold'},
 });
