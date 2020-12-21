@@ -8,13 +8,119 @@ import {
   FlatList,
   TouchableOpacity,
   SafeAreaView,
+  Alert,
 } from 'react-native';
+import database from '@react-native-firebase/database';
+
 import ProductCard from '../Components/ProductCard';
+import {AuthContext} from '../Navigations/AuthProvider';
 
 import Colors from '../Utils/Colors';
 
-const ConfirmOrder = ({route}) => {
+const ConfirmOrder = ({route, navigation}) => {
   const {data} = route.params;
+  const {user} = React.useContext(AuthContext);
+
+  const [totalWeight, setTotalWeight] = React.useState('');
+  const [orderPrice, setOrderPrice] = React.useState('5');
+  const [orderInfo, setOrderInfo] = React.useState();
+  const [selectedCities, setSelectedCities] = React.useState('');
+  const [selectedTown, setSelectedTown] = React.useState('');
+  const [address, setAddress] = React.useState('');
+
+  function getUniqueId() {
+    var S4 = function () {
+      return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    };
+    return (
+      S4() +
+      S4() +
+      '-' +
+      S4() +
+      '-' +
+      S4() +
+      '-' +
+      S4() +
+      '-' +
+      S4() +
+      S4() +
+      S4()
+    );
+  }
+
+  const orderPublish = () => {
+    if (
+      !orderInfo ||
+      !totalWeight.trim() ||
+      !orderPrice.trim() ||
+      !selectedCities.trim() ||
+      !selectedTown.trim() ||
+      !address.trim()
+    ) {
+      Alert.alert('Hata', 'Lütfen alanları boş bırakmayın.', [{text: 'OK'}], {
+        cancelable: false,
+      });
+    } else {
+      var token = getUniqueId();
+      database()
+        .ref(`/orders/${selectedCities}/${selectedTown}/${token}/`)
+        .set({
+          userId: user.uid,
+          orderData: data,
+          city: selectedCities,
+          town: selectedTown,
+          address: address,
+          orderPrice: orderPrice,
+          totalWeight: totalWeight,
+          orderStatus: 'Alıcı Bekleniyor',
+          courierId: 0,
+        });
+      database().ref(`/userOrders/${user.uid}/${token}/`).set({
+        orderToken: token,
+        orderData: data,
+        city: selectedCities,
+        town: selectedTown,
+        address: address,
+        orderPrice: orderPrice,
+        totalWeight: totalWeight,
+        orderStatus: 'Alıcı Bekleniyor',
+        courierId: 0,
+      });
+      Alert.alert(
+        'Başarılı',
+        'Siparişiniz yayınlandı. Ana sayfaya yönlendiriliyorsunuz...',
+        [{text: 'OK', onPress: () => navigation.navigate('Home')}],
+        {cancelable: false},
+      );
+    }
+  };
+
+  React.useEffect(() => {
+    var x = 0;
+    data.forEach((element) => {
+      x += element.productWeight * element.productQuantity;
+    });
+    setTotalWeight((x / 1000).toString());
+
+    database()
+      .ref(`/users/${user.uid}/city`)
+      .once('value')
+      .then((snapshot) => {
+        setSelectedCities(snapshot.val());
+      });
+    database()
+      .ref(`/users/${user.uid}/town`)
+      .once('value')
+      .then((snapshot) => {
+        setSelectedTown(snapshot.val());
+      });
+    database()
+      .ref(`/users/${user.uid}/address`)
+      .once('value')
+      .then((snapshot) => {
+        setAddress(snapshot.val());
+      });
+  }, []);
 
   return (
     <View as={SafeAreaView} style={styles.container}>
@@ -29,7 +135,7 @@ const ConfirmOrder = ({route}) => {
               alignItems: 'center',
             }}>
             <Text style={styles.infoText}>Sepet Ağırlığı:</Text>
-            <Text style={[styles.infoText, {flex: 0.5}]}> 5 Kg</Text>
+            <Text style={[styles.infoText, {flex: 0.5}]}>{totalWeight} Kg</Text>
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text style={styles.infoText}>Sepet Kurye Ücreti:</Text>
@@ -40,22 +146,27 @@ const ConfirmOrder = ({route}) => {
                 color: 'black',
                 borderRadius: 10,
               }}
-              value="5"
+              value={orderPrice}
+              onChange={(a) => setOrderPrice(a)}
             />
           </View>
         </View>
         <View style={styles.textAreaContainer}>
           <TextInput
             style={styles.textArea}
-            underlineColorAndroid="transparent"
             placeholder="Siparişinizle ilgili açıklamalar yapabilirsiniz."
             placeholderTextColor="grey"
             numberOfLines={10}
             multiline={true}
+            value={orderInfo}
+            onChange={(a) => setOrderInfo(a)}
           />
         </View>
         <View style={styles.address}>
-          <TextInput placeholder="adres (varsayılan olarak profilden çekilir)" />
+          <Text style={{fontSize: 18}}>
+            <Text style={{fontWeight: 'bold'}}>Adres:</Text>
+            {address + ' ' + selectedTown + '/' + selectedCities}
+          </Text>
         </View>
         <ScrollView style={styles.shoppingList}>
           <FlatList
@@ -71,7 +182,9 @@ const ConfirmOrder = ({route}) => {
           />
         </ScrollView>
       </ScrollView>
-      <TouchableOpacity style={styles.publishOrder}>
+      <TouchableOpacity
+        style={styles.publishOrder}
+        onPress={() => orderPublish()}>
         <Text style={styles.publishText}>Siparişi Yayınla</Text>
       </TouchableOpacity>
     </View>
@@ -130,7 +243,7 @@ const styles = StyleSheet.create({
   address: {
     borderColor: 'gray',
     borderWidth: 1,
-    padding: 5,
+    padding: 10,
     backgroundColor: 'white',
     borderRadius: 10,
     marginTop: 10,
