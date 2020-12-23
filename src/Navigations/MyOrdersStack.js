@@ -7,7 +7,12 @@ import MyOrders from '../Screens/MyOrders';
 
 const HomeStack = createStackNavigator();
 
-function HomeStackScreen() {
+function HomeStackScreen({navigation, route}) {
+  if (route.state && route.state.index > 0) {
+    navigation.setOptions({tabBarVisible: false});
+  } else {
+    navigation.setOptions({tabBarVisible: true});
+  }
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
