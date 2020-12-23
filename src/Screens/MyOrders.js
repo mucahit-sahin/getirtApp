@@ -1,23 +1,42 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet, Text, View, ScrollView} from 'react-native';
+import database from '@react-native-firebase/database';
+
 import MyCourierCard from '../Components/MyCourierCard';
 import MyOrderCard from '../Components/MyOrderCard';
 
 import Colors from '../Utils/Colors';
+import {AuthContext} from '../Navigations/AuthProvider';
 
 const MyOrders = ({navigation}) => {
+  const {user} = React.useContext(AuthContext);
+  const [orders, setOrders] = React.useState([]);
+  database()
+    .ref(`/userOrders/${user.uid}/`)
+    .once('value')
+    .then((snapshot) => {
+      setOrders(Object.values(snapshot.val()));
+    });
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Siparişlerim</Text>
       </View>
+
       <ScrollView style={styles.orders}>
-        <MyOrderCard
-          username="mucahitsah"
-          orderWeight={7.5}
-          orderPrice={11}
-          onPress={() => navigation.navigate('MyOrderDetails')}
-        />
+        {orders &&
+          orders.map((order) => (
+            <MyOrderCard
+              username={order.orderToken}
+              orderWeight={order.totalWeight}
+              orderPrice={order.orderPrice}
+              orderStatus={order.orderStatus}
+              onPress={() =>
+                navigation.navigate('MyOrderDetails', {data: order})
+              }
+            />
+          ))}
         <MyCourierCard
           username="mucahitsah"
           orderWeight={7.5}

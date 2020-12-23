@@ -11,7 +11,9 @@ import {
 import ProductCard from '../Components/ProductCard';
 import Colors from '../Utils/Colors';
 
-const MyOrderDetails = () => {
+const MyOrderDetails = ({route}) => {
+  const {data} = route.params;
+
   const confirmSure = () =>
     Alert.alert(
       'Emin misin?',
@@ -50,7 +52,7 @@ const MyOrderDetails = () => {
                 color: 'white',
                 textAlign: 'center',
               }}>
-              Yok
+              {data.courierId}
             </Text>
           </View>
           <View style={{flexDirection: 'row'}}>
@@ -64,16 +66,16 @@ const MyOrderDetails = () => {
                 color: 'white',
                 textAlign: 'center',
               }}>
-              Kişi Bekleniyor
+              {data.orderStatus}
             </Text>
           </View>
         </View>
 
         <View style={styles.productDescription}>
-          <Text>Açıklama</Text>
+          <Text>{data.orderInfo}</Text>
         </View>
         <View style={styles.productDescription}>
-          <Text>Adress</Text>
+          <Text>{data.address + ' ' + data.town + '/' + data.city}</Text>
         </View>
 
         <View style={styles.productList}>
@@ -91,7 +93,7 @@ const MyOrderDetails = () => {
                 color: 'white',
                 textAlign: 'center',
               }}>
-              10 Kg
+              {data.totalWeight} Kg
             </Text>
             <Text
               style={{
@@ -100,7 +102,7 @@ const MyOrderDetails = () => {
                 color: 'white',
                 textAlign: 'center',
               }}>
-              16 TL
+              {data.orderPrice} TL
             </Text>
           </View>
           <ScrollView>
