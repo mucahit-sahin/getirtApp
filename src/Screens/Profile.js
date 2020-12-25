@@ -7,6 +7,9 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator,
+  Modal,
+  TextInput,
+  Alert,
 } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import database from '@react-native-firebase/database';
@@ -22,51 +25,40 @@ const windowWidth = Dimensions.get('window').width;
 
 const Profile = () => {
   const {logout, user} = React.useContext(AuthContext);
-  const [name, setName] = React.useState();
-  const [surname, setSurname] = React.useState();
-  const [phoneNumber, setPhoneNumber] = React.useState();
-  const [selectedCities, setSelectedCities] = React.useState();
-  const [selectedTown, setSelectedTown] = React.useState();
-  const [address, setAddress] = React.useState();
+
+  const [userData, setUserData] = React.useState({});
+  const [selectedCities, setSelectedCities] = React.useState('İl seçiniz');
+  const [selectedTown, setSelectedTown] = React.useState('İlçe seçiniz');
+  const [address, setAddress] = React.useState('');
+  const [isAdressChange, setIsAdressChange] = React.useState(false);
+
+  const [townList, setTownList] = React.useState([]);
 
   React.useEffect(() => {
     database()
-      .ref(`/users/${user.uid}/name`)
+      .ref(`/users/${user.uid}/`)
       .once('value')
       .then((snapshot) => {
-        setName(snapshot.val());
-      });
-    database()
-      .ref(`/users/${user.uid}/surname`)
-      .once('value')
-      .then((snapshot) => {
-        setSurname(snapshot.val());
-      });
-    database()
-      .ref(`/users/${user.uid}/phoneNumber`)
-      .once('value')
-      .then((snapshot) => {
-        setPhoneNumber(snapshot.val());
-      });
-    database()
-      .ref(`/users/${user.uid}/city`)
-      .once('value')
-      .then((snapshot) => {
-        setSelectedCities(snapshot.val());
-      });
-    database()
-      .ref(`/users/${user.uid}/town`)
-      .once('value')
-      .then((snapshot) => {
-        setSelectedTown(snapshot.val());
-      });
-    database()
-      .ref(`/users/${user.uid}/address`)
-      .once('value')
-      .then((snapshot) => {
-        setAddress(snapshot.val());
+        setUserData(snapshot.val());
       });
   }, []);
+
+  const changeTownList = (itemValue) => {
+    setSelectedCities(itemValue);
+    townList.splice(0, townList.length);
+    townList.push();
+    citiesData.map((a) => {
+      if (a.name == itemValue) {
+        townData.map((b) => {
+          if (a.id == b.il_id) {
+            townList.push(b);
+          }
+        });
+        setSelectedTown(townList[0].name);
+        return;
+      }
+    });
+  };
   return (
     <View style={styles.container}>
       <View style={styles.profileImageView}>
@@ -85,56 +77,163 @@ const Profile = () => {
         <View style={styles.aboutViewRow}>
           <Text style={{fontSize: 20}}>
             <Text style={{fontWeight: 'bold'}}>Ad: </Text>
-            {name ? name : <ActivityIndicator color="black" />}
+            {userData ? userData.name : <ActivityIndicator color="black" />}
           </Text>
         </View>
         <View style={styles.aboutViewRow}>
           <Text style={{fontSize: 20}}>
             <Text style={{fontWeight: 'bold'}}>Soyad: </Text>
-            {surname ? surname : <ActivityIndicator color="black" />}
+            {userData ? userData.surname : <ActivityIndicator color="black" />}
           </Text>
         </View>
         <View style={styles.aboutViewRow}>
           <Text style={{fontSize: 20}}>
             <Text style={{fontWeight: 'bold'}}>Telefon: </Text>
-            {phoneNumber ? phoneNumber : <ActivityIndicator color="black" />}
+            {userData ? (
+              userData.phoneNumber
+            ) : (
+              <ActivityIndicator color="black" />
+            )}
           </Text>
         </View>
         <View style={[styles.aboutViewRow, {alignItems: 'center'}]}>
-          <Text style={{fontWeight: 'bold', fontSize: 20}}>İl:</Text>
-          <Picker
-            selectedValue={selectedCities}
-            style={{height: 50, width: windowWidth, fontSize: 20}}
-            onValueChange={(itemValue) => setSelectedCities(itemValue)}>
-            {citiesData?.map((a) => (
-              <Picker.Item label={a.name} value={a.id} key={a.id} />
-            ))}
-          </Picker>
+          <Text style={{fontSize: 20}}>
+            <Text style={{fontWeight: 'bold'}}>İl: </Text>
+            {userData ? userData.city : <ActivityIndicator color="black" />}
+          </Text>
         </View>
         <View style={[styles.aboutViewRow, {alignItems: 'center'}]}>
-          <Text style={{fontWeight: 'bold', fontSize: 20}}>İlçe:</Text>
-          <Picker
-            selectedValue={selectedTown}
-            style={{height: 50, width: windowWidth, fontSize: 20}}
-            onValueChange={(itemValue, itemIndex) =>
-              setSelectedTown(itemValue)
-            }>
-            {townData?.map((a) => (
-              <Picker.Item label={a.name} value={a.id} key={a.id} />
-            ))}
-          </Picker>
+          <Text style={{fontSize: 20}}>
+            <Text style={{fontWeight: 'bold'}}>İlçe: </Text>
+            {userData ? userData.town : <ActivityIndicator color="black" />}
+          </Text>
         </View>
-
         <View style={styles.aboutViewRow}>
           <Text style={{fontSize: 20}}>
             <Text style={{fontWeight: 'bold'}}>Adres: </Text>
-            {address ? address : <ActivityIndicator color="black" />}
+            {userData ? userData.address : <ActivityIndicator color="black" />}
           </Text>
         </View>
-        <TouchableOpacity style={styles.button}>
-          <Text style={{fontSize: 20, fontWeight: 'bold'}}>Güncelle</Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => setIsAdressChange(true)}>
+          <Text style={styles.buttonText}>Adres Güncelle</Text>
         </TouchableOpacity>
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isAdressChange}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <View style={styles.formRow}>
+              <View style={{flex: 0.3}}>
+                <Text style={styles.label}>İl:</Text>
+              </View>
+              <View style={{flex: 0.7}}>
+                <Picker
+                  selectedValue={selectedCities}
+                  style={styles.picker}
+                  onValueChange={(itemValue) => changeTownList(itemValue)}>
+                  {citiesData?.map((a) => (
+                    <Picker.Item label={a.name} value={a.name} key={a.id} />
+                  ))}
+                </Picker>
+              </View>
+            </View>
+            {selectedCities !== 'İl seçiniz' && (
+              <View style={styles.formRow}>
+                <View style={{flex: 0.3}}>
+                  <Text style={styles.label}>İlçe:</Text>
+                </View>
+                <View style={{flex: 0.7}}>
+                  <Picker
+                    selectedValue={selectedTown}
+                    style={styles.picker}
+                    onValueChange={(itemValue) => setSelectedTown(itemValue)}>
+                    {townList?.map((a) => (
+                      <Picker.Item label={a.name} value={a.name} key={a.id} />
+                    ))}
+                  </Picker>
+                </View>
+              </View>
+            )}
+            {selectedTown !== 'İlçe seçiniz' && (
+              <View style={styles.formRow}>
+                <View style={{flex: 0.3}}>
+                  <Text style={styles.label}>Adres:</Text>
+                </View>
+                <View style={{flex: 0.7}}>
+                  <TextInput
+                    style={styles.picker}
+                    multiline={true}
+                    value={address}
+                    onChangeText={(text) => setAddress(text)}
+                  />
+                </View>
+              </View>
+            )}
+            <View style={{flexDirection: 'row'}}>
+              <TouchableOpacity
+                style={{
+                  ...styles.openButton,
+                  backgroundColor: '#2196F3',
+                  flex: 1,
+                }}
+                onPress={() => {
+                  if (
+                    !selectedCities.trim() ||
+                    !selectedTown.trim() ||
+                    !address.trim()
+                  ) {
+                    alert('Lütfen alanları boş bırakmayın!');
+                  } else {
+                    database()
+                      .ref(`/users/${user.uid}/`)
+                      .update({
+                        city: selectedCities,
+                        town: selectedTown,
+                        address: address,
+                      })
+                      .then(() => console.log('Data updated.'));
+                    database()
+                      .ref(`/users/${user.uid}/`)
+                      .once('value')
+                      .then((snapshot) => {
+                        setUserData(snapshot.val());
+                      });
+                    setSelectedCities('İl seçiniz');
+                    setSelectedTown('İlçe seçiniz');
+                    setAddress('');
+                    setIsAdressChange(!isAdressChange);
+                  }
+                }}>
+                <Text style={styles.textStyle}>Güncelle</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={{flexDirection: 'row', marginTop: 10}}>
+              <TouchableOpacity
+                style={{
+                  ...styles.openButton,
+                  backgroundColor: '#2196F3',
+                  flex: 1,
+                }}
+                onPress={() => {
+                  setSelectedCities('İl seçiniz');
+                  setSelectedTown('İlçe seçiniz');
+                  setAddress('');
+                  setIsAdressChange(!isAdressChange);
+                }}>
+                <Text style={styles.textStyle}>İptal</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -176,10 +275,69 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   button: {
-    backgroundColor: Colors.mor,
+    backgroundColor: '#2196F3',
     borderRadius: 10,
     padding: 10,
     alignItems: 'center',
     margin: 10,
+    position: 'absolute',
+    bottom: 10,
+    left: 5,
+    right: 5,
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
+  centeredView: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(100,100,100, 0.5)',
+    padding: 20,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 10,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  openButton: {
+    backgroundColor: '#F194FF',
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  formRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    margin: 10,
+    padding: 10,
+    backgroundColor: Colors.yesil,
+    borderRadius: 15,
+  },
+  label: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 20,
+  },
+  picker: {
+    color: 'white',
   },
 });
