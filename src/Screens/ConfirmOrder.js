@@ -23,10 +23,8 @@ const ConfirmOrder = ({route, navigation}) => {
 
   const [totalWeight, setTotalWeight] = React.useState('');
   const [orderPrice, setOrderPrice] = React.useState('5');
-  const [orderInfo, setOrderInfo] = React.useState();
-  const [selectedCities, setSelectedCities] = React.useState('');
-  const [selectedTown, setSelectedTown] = React.useState('');
-  const [address, setAddress] = React.useState('');
+  const [orderInfo, setOrderInfo] = React.useState('');
+  const [userData, setUserData] = React.useState({});
 
   function getUniqueId() {
     var S4 = function () {
@@ -50,12 +48,10 @@ const ConfirmOrder = ({route, navigation}) => {
 
   const orderPublish = () => {
     if (
-      !orderInfo ||
       !totalWeight.trim() ||
       !orderPrice.trim() ||
-      !selectedCities.trim() ||
-      !selectedTown.trim() ||
-      !address.trim()
+      !orderInfo.trim() ||
+      !userData
     ) {
       Alert.alert('Hata', 'Lütfen alanları boş bırakmayın.', [{text: 'OK'}], {
         cancelable: false,
@@ -63,29 +59,35 @@ const ConfirmOrder = ({route, navigation}) => {
     } else {
       var token = getUniqueId();
       database()
-        .ref(`/orders/${selectedCities}/${selectedTown}/${token}/`)
+        .ref(`/orders/${userData.city}/${userData.town}/${token}/`)
         .set({
           userId: user.uid,
           orderData: data,
-          city: selectedCities,
-          town: selectedTown,
-          address: address,
+          city: userData.city,
+          town: userData.town,
+          address: userData.address,
           orderPrice: orderPrice,
           totalWeight: totalWeight,
-          orderStatus: 'Alıcı Bekleniyor',
+          orderStatus: 'Kurye Aranıyor',
           courierId: 0,
+          orderInfo: orderInfo,
+          fullName: userData.name + ' ' + userData.surname,
         });
-      database().ref(`/userOrders/${user.uid}/${token}/`).set({
-        orderToken: token,
-        orderData: data,
-        city: selectedCities,
-        town: selectedTown,
-        address: address,
-        orderPrice: orderPrice,
-        totalWeight: totalWeight,
-        orderStatus: 'Alıcı Bekleniyor',
-        courierId: 0,
-      });
+      database()
+        .ref(`/userOrders/${user.uid}/${token}/`)
+        .set({
+          orderToken: token,
+          orderData: data,
+          city: userData.city,
+          town: userData.town,
+          address: userData.address,
+          orderPrice: orderPrice,
+          totalWeight: totalWeight,
+          orderStatus: 'Kurye Aranıyor',
+          courierId: 0,
+          orderInfo: orderInfo,
+          fullName: userData.name + ' ' + userData.surname,
+        });
       Alert.alert(
         'Başarılı',
         'Siparişiniz yayınlandı. Ana sayfaya yönlendiriliyorsunuz...',
@@ -103,22 +105,10 @@ const ConfirmOrder = ({route, navigation}) => {
     setTotalWeight((x / 1000).toString());
 
     database()
-      .ref(`/users/${user.uid}/city`)
+      .ref(`/users/${user.uid}/`)
       .once('value')
       .then((snapshot) => {
-        setSelectedCities(snapshot.val());
-      });
-    database()
-      .ref(`/users/${user.uid}/town`)
-      .once('value')
-      .then((snapshot) => {
-        setSelectedTown(snapshot.val());
-      });
-    database()
-      .ref(`/users/${user.uid}/address`)
-      .once('value')
-      .then((snapshot) => {
-        setAddress(snapshot.val());
+        setUserData(snapshot.val());
       });
   }, []);
 
@@ -138,7 +128,7 @@ const ConfirmOrder = ({route, navigation}) => {
             <Text style={[styles.infoText, {flex: 0.5}]}>{totalWeight} Kg</Text>
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Text style={styles.infoText}>Sepet Kurye Ücreti:</Text>
+            <Text style={styles.infoText}>Sepet Kurye Ücreti (TL):</Text>
             <TextInput
               style={{
                 backgroundColor: 'white',
@@ -147,25 +137,22 @@ const ConfirmOrder = ({route, navigation}) => {
                 borderRadius: 10,
               }}
               value={orderPrice}
-              onChange={(a) => setOrderPrice(a)}
+              onChangeText={(a) => setOrderPrice(a)}
             />
           </View>
         </View>
         <View style={styles.textAreaContainer}>
           <TextInput
-            style={styles.textArea}
+            style={{flex: 1}}
             placeholder="Siparişinizle ilgili açıklamalar yapabilirsiniz."
-            placeholderTextColor="grey"
-            numberOfLines={10}
-            multiline={true}
             value={orderInfo}
-            onChange={(a) => setOrderInfo(a)}
+            onChangeText={(a) => setOrderInfo(a)}
           />
         </View>
         <View style={styles.address}>
           <Text style={{fontSize: 18}}>
             <Text style={{fontWeight: 'bold'}}>Adres:</Text>
-            {address + ' ' + selectedTown + '/' + selectedCities}
+            {userData.address + ' ' + userData.town + '/' + userData.city}
           </Text>
         </View>
         <ScrollView style={styles.shoppingList}>
@@ -235,10 +222,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     marginTop: 10,
-  },
-  textArea: {
-    height: 150,
-    justifyContent: 'flex-start',
   },
   address: {
     borderColor: 'gray',
