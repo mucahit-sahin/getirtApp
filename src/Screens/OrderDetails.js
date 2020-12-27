@@ -11,7 +11,8 @@ import {
 import ProductCard from '../Components/ProductCard';
 import Colors from '../Utils/Colors';
 
-const OrderDetails = () => {
+const OrderDetails = ({route}) => {
+  const {data} = route.params;
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -26,50 +27,34 @@ const OrderDetails = () => {
             />
           </View>
           <View style={{flex: 0.8, alignItems: 'center'}}>
-            <Text style={styles.productText}>username</Text>
+            <Text style={styles.productText}>{data.fullName}</Text>
           </View>
         </View>
         <View style={styles.productDescription}>
-          <Text>Açıklama</Text>
+          <Text style={{fontSize: 15}}>{data.orderInfo}</Text>
         </View>
         <View style={styles.productDescription}>
-          <Text>Adress</Text>
+          <Text style={{fontSize: 15}}>
+            {data.address + ' ' + data.town + '/' + data.city}
+          </Text>
         </View>
         <View style={styles.productsCard}>
           <View style={styles.orderInfo}>
             <View style={styles.orderInfoColum}>
-              <Text style={{color: 'white'}}>15 Kg</Text>
+              <Text style={{color: 'white'}}>{data.totalWeight} Kg</Text>
             </View>
             <View style={styles.orderInfoColum}>
-              <Text style={{color: 'white'}}>30 TL</Text>
+              <Text style={{color: 'white'}}>{data.orderPrice} TL</Text>
             </View>
           </View>
           <ScrollView nestedScrollEnabled={true}>
-            <ProductCard
-              productName="ürün"
-              productQuantity={1}
-              productWeight={100}
-            />
-            <ProductCard
-              productName="ürün"
-              productQuantity={1}
-              productWeight={100}
-            />
-            <ProductCard
-              productName="ürün"
-              productQuantity={1}
-              productWeight={100}
-            />
-            <ProductCard
-              productName="ürün"
-              productQuantity={1}
-              productWeight={100}
-            />
-            <ProductCard
-              productName="ürün"
-              productQuantity={1}
-              productWeight={100}
-            />
+            {data.orderData.map((product) => (
+              <ProductCard
+                productName={product.productName}
+                productQuantity={product.productQuantity}
+                productWeight={product.productWeight}
+              />
+            ))}
           </ScrollView>
         </View>
       </ScrollView>
@@ -108,7 +93,7 @@ const styles = StyleSheet.create({
     padding: 5,
     margin: 5,
     backgroundColor: 'white',
-    height: 150,
+    height: 100,
     borderRadius: 10,
   },
   productsCard: {
@@ -124,6 +109,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     margin: 5,
+    padding: 10,
     backgroundColor: Colors.mor,
     borderRadius: 10,
   },
