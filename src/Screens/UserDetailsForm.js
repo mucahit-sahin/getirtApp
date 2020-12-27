@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
+  ActivityIndicator,
 } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -21,14 +22,15 @@ import {AuthContext} from '../Navigations/AuthProvider';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const UserDetailsForm = () => {
+const UserDetailsForm = ({navigation}) => {
   const [name, setName] = React.useState('');
   const [surname, setSurname] = React.useState('');
   const [phoneNumber, setPhoneNumber] = React.useState('');
-  const [selectedCities, setSelectedCities] = React.useState('Adana');
-  const [selectedTown, setSelectedTown] = React.useState('Seyhan');
+  const [selectedCities, setSelectedCities] = React.useState('İl seçiniz');
+  const [selectedTown, setSelectedTown] = React.useState('İlçe seçiniz');
   const [address, setAddress] = React.useState('');
   const [uyari, setUyari] = React.useState('');
+  const [townList, setTownList] = React.useState([]);
 
   const {user} = React.useContext(AuthContext);
 
@@ -56,9 +58,25 @@ const UserDetailsForm = () => {
           address: address,
         })
         .then(() => setUyari('Profil Tamamlandı'));
+      navigation.navigate('Home');
     }
   };
-
+  const changeTownList = (itemValue) => {
+    setSelectedCities(itemValue);
+    townList.splice(0, townList.length);
+    townList.push();
+    citiesData.map((a) => {
+      if (a.name == itemValue) {
+        townData.map((b) => {
+          if (a.id == b.il_id) {
+            townList.push(b);
+          }
+        });
+        setSelectedTown(townList[0].name);
+        return;
+      }
+    });
+  };
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -98,32 +116,38 @@ const UserDetailsForm = () => {
               <Picker
                 selectedValue={selectedCities}
                 style={styles.textInput}
-                onValueChange={(itemValue) => setSelectedCities(itemValue)}>
+                onValueChange={(itemValue) => changeTownList(itemValue)}>
                 {citiesData?.map((a) => (
-                  <Picker.Item label={a.name} value={a.id} key={a.id} />
+                  <Picker.Item label={a.name} value={a.name} key={a.id} />
                 ))}
               </Picker>
             </View>
-            <View style={styles.formRow}>
-              <Text style={styles.label}>İlçe:</Text>
-              <Picker
-                selectedValue={selectedTown}
-                style={styles.textInput}
-                onValueChange={(itemValue) => setSelectedTown(itemValue)}>
-                {townData?.map((a) => (
-                  <Picker.Item label={a.name} value={a.id} key={a.id} />
-                ))}
-              </Picker>
-            </View>
-            <View style={styles.formRow}>
-              <Text style={styles.label}>Adres:</Text>
-              <TextInput
-                style={styles.textInput}
-                multiline={true}
-                value={address}
-                onChangeText={(text) => setAddress(text)}
-              />
-            </View>
+            {selectedCities !== 'İl seçiniz' ? (
+              <View style={styles.formRow}>
+                <Text style={styles.label}>İlçe:</Text>
+                <Picker
+                  selectedValue={selectedTown}
+                  style={styles.textInput}
+                  onValueChange={(itemValue) => setSelectedTown(itemValue)}>
+                  {townList?.map((a) => (
+                    <Picker.Item label={a.name} value={a.name} key={a.id} />
+                  ))}
+                </Picker>
+              </View>
+            ) : (
+              <ActivityIndicator color="black" />
+            )}
+            {selectedTown !== 'İlçe seçiniz' && (
+              <View style={styles.formRow}>
+                <Text style={styles.label}>Adres:</Text>
+                <TextInput
+                  style={styles.textInput}
+                  multiline={true}
+                  value={address}
+                  onChangeText={(text) => setAddress(text)}
+                />
+              </View>
+            )}
           </View>
           <TouchableOpacity
             style={styles.submit}
