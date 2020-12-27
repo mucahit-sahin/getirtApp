@@ -1,4 +1,5 @@
 export { default as Kurye } from './Kurye'
+export { default as Filter } from './Filter'
 export { default as Home } from './Home'
 export { default as Logout } from './Logout'
 export { default as Package } from './Package'
