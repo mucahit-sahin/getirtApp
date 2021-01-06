@@ -8,7 +8,25 @@ const MyOrderCard = ({
   orderWeight,
   orderPrice,
   onPress,
+  orderStatus,
 }) => {
+  switch (orderStatus) {
+    case '1':
+      orderStatus = 'Kurye Aranıyor';
+      break;
+    case '2':
+      orderStatus = 'Alışveriş Yapılıyor';
+      break;
+    case '3':
+      orderStatus = 'Sipariş Yolda';
+      break;
+    case '4':
+      orderStatus = 'Sipariş Ulaştı';
+      break;
+    case '5':
+      orderStatus = 'Sipariş Tamamlandı';
+      break;
+  }
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.header}>
@@ -20,13 +38,13 @@ const MyOrderCard = ({
       </View>
       <View style={styles.status}>
         <View style={styles.circle}>
-          <Text>{orderWeight} Kg</Text>
+          <Text style={{textAlign: 'center'}}>{orderWeight} Kg</Text>
         </View>
         <View style={styles.circle}>
-          <Text>{orderPrice} TL</Text>
+          <Text style={{textAlign: 'center'}}>{orderPrice} TL</Text>
         </View>
         <View style={styles.circle}>
-          <Text>Tamamlandı</Text>
+          <Text style={{textAlign: 'center'}}>{orderStatus}</Text>
         </View>
       </View>
     </TouchableOpacity>
