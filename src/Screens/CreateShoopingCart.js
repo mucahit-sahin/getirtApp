@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     borderTopStartRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 0.1,
+    height: '10%',
   },
   totalViewText: {color: 'white', fontWeight: 'bold'},
 });

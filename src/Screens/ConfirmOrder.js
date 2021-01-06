@@ -68,14 +68,16 @@ const ConfirmOrder = ({route, navigation}) => {
           address: userData.address,
           orderPrice: orderPrice,
           totalWeight: totalWeight,
-          orderStatus: 'Kurye Aranıyor',
+          orderStatus: '1',
           courierId: 0,
           orderInfo: orderInfo,
           fullName: userData.name + ' ' + userData.surname,
+          token: token,
         });
       database()
         .ref(`/userOrders/${user.uid}/${token}/`)
         .set({
+          userId: user.uid,
           orderToken: token,
           orderData: data,
           city: userData.city,
@@ -83,7 +85,7 @@ const ConfirmOrder = ({route, navigation}) => {
           address: userData.address,
           orderPrice: orderPrice,
           totalWeight: totalWeight,
-          orderStatus: 'Kurye Aranıyor',
+          orderStatus: '1',
           courierId: 0,
           orderInfo: orderInfo,
           fullName: userData.name + ' ' + userData.surname,
