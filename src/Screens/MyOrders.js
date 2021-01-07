@@ -1,5 +1,12 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet, Text, View, ScrollView} from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  RefreshControl,
+} from 'react-native';
 import database from '@react-native-firebase/database';
 
 import MyCourierCard from '../Components/MyCourierCard';
@@ -11,12 +18,35 @@ import {AuthContext} from '../Navigations/AuthProvider';
 const MyOrders = ({navigation}) => {
   const {user} = React.useContext(AuthContext);
   const [orders, setOrders] = React.useState([]);
-  database()
-    .ref(`/userOrders/${user.uid}/`)
-    .once('value')
-    .then((snapshot) => {
-      setOrders(Object.values(snapshot.val()));
-    });
+  const [refresh, setRefresh] = React.useState(false);
+  React.useEffect(() => {
+    database()
+      .ref(`/userOrders/${user.uid}/`)
+      .once('value', (snapshot) => {
+        if (snapshot.val()) setOrders(Object.values(snapshot.val()));
+      });
+  }, []);
+
+  React.useEffect(() => {
+    const onValueChange = database()
+      .ref(`/userOrders/${user.uid}/`)
+      .on('value', (snapshot) => {
+        if (snapshot.val()) setOrders(Object.values(snapshot.val()));
+      });
+    return () =>
+      database().ref(`/userOrders/${user.uid}/`).off('value', onValueChange);
+  }, [user]);
+
+  const refreshMyOrders = async () => {
+    setRefresh(true);
+    setOrders([]);
+    database()
+      .ref(`/userOrders/${user.uid}/`)
+      .once('value', (snapshot) => {
+        if (snapshot.val()) setOrders(Object.values(snapshot.val()));
+      });
+    setRefresh(false);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -24,25 +54,42 @@ const MyOrders = ({navigation}) => {
         <Text style={styles.headerText}>Siparişlerim</Text>
       </View>
 
-      <ScrollView style={styles.orders}>
-        {orders &&
-          orders.map((order) => (
-            <MyOrderCard
-              username={order.orderToken}
-              orderWeight={order.totalWeight}
-              orderPrice={order.orderPrice}
-              orderStatus={order.orderStatus}
-              onPress={() =>
-                navigation.navigate('MyOrderDetails', {data: order})
-              }
-            />
-          ))}
-        <MyCourierCard
-          username="mucahitsah"
-          orderWeight={7.5}
-          orderPrice={11}
-          onPress={() => navigation.navigate('MyCourierDetails')}
-        />
+      <ScrollView
+        style={styles.orders}
+        refreshControl={
+          <RefreshControl refreshing={refresh} onRefresh={refreshMyOrders} />
+        }>
+        {orders.length > 0 ? (
+          orders.map((order) =>
+            order.courierId == user.uid ? (
+              <MyCourierCard
+                key={order.token}
+                username={order.fullName}
+                orderWeight={order.totalWeight}
+                orderPrice={order.orderPrice}
+                orderStatus={order.orderStatus}
+                onPress={() =>
+                  navigation.navigate('MyCourierDetails', {data: order})
+                }
+              />
+            ) : (
+              <MyOrderCard
+                key={order.token}
+                username={order.fullName}
+                orderWeight={order.totalWeight}
+                orderPrice={order.orderPrice}
+                orderStatus={order.orderStatus}
+                onPress={() =>
+                  navigation.navigate('MyOrderDetails', {data: order})
+                }
+              />
+            ),
+          )
+        ) : (
+          <View style={{alignItems: 'center', justifyContent: 'center'}}>
+            <Text>Siparişiniz yok.</Text>
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
