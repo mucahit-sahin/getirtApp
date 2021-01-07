@@ -3,33 +3,72 @@ import {
   StyleSheet,
   Text,
   View,
-  Dimensions,
   TouchableOpacity,
   SafeAreaView,
+  Alert,
 } from 'react-native';
+import database from '@react-native-firebase/database';
 
 import KuryeIcon from '../Components/icons/Kurye';
 import SiparisIcon from '../Components/icons/Siparis';
+import {AuthContext} from '../Navigations/AuthProvider';
 
 import Colors from '../Utils/Colors';
 
-const windowHeight = Dimensions.get('window').height;
-
 const Home = ({navigation}) => {
+  const {user} = React.useContext(AuthContext);
+  database()
+    .ref(`/users/${user.uid}/`)
+    .once('value')
+    .then((snapshot) => {
+      if (!snapshot.val()) {
+        navigation.navigate('UserDetailsForm');
+      }
+    });
+
   return (
     <View as={SafeAreaView} style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Baslık yada Logo</Text>
+        <Text style={styles.headerText}>Getirt</Text>
       </View>
       <TouchableOpacity
         style={styles.kuryeCard}
-        onPress={() => navigation.navigate('Orders')}>
+        onPress={() => {
+          database()
+            .ref(`/users/${user.uid}/`)
+            .once('value')
+            .then((snapshot) => {
+              if (!snapshot.val()) {
+                navigation.navigate('UserDetailsForm');
+              } else {
+                if (!snapshot.val().isWork) {
+                  navigation.navigate('Orders');
+                } else {
+                  Alert.alert(
+                    'Uyarı',
+                    'Mevcut işiniz bitmeden yeni bir iş alamazsınız !',
+                  );
+                }
+              }
+            });
+        }}>
         <KuryeIcon width={100} />
         <Text style={styles.cardText}>Biraz para kazanmaya ne dersin?</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.siparisVerCard}
-        onPress={() => navigation.navigate('CreateShoopingCart')}>
+        onPress={() => {
+          database()
+            .ref(`/users/${user.uid}/`)
+            .once('value')
+            .then((snapshot) => {
+              if (!snapshot.val()) {
+                navigation.navigate('UserDetailsForm');
+              } else {
+                navigation.navigate('CreateShoopingCart');
+              }
+            });
+        }}>
         <SiparisIcon width={100} />
         <Text style={styles.cardText}>Sipariş mi vermek istiyorsun?</Text>
       </TouchableOpacity>
@@ -40,13 +79,13 @@ const Home = ({navigation}) => {
 export default Home;
 
 const styles = StyleSheet.create({
-  container: {flexDirection: 'column'},
+  container: {flexDirection: 'column', flex: 1},
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: Colors.yesil,
-    height: windowHeight * 0.35,
+    flex: 0.4,
     borderBottomStartRadius: 20,
     borderBottomEndRadius: 20,
   },
@@ -57,7 +96,7 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 10,
     borderRadius: 10,
-    height: windowHeight * 0.25,
+    flex: 0.3,
   },
   siparisVerCard: {
     flexDirection: 'row',
@@ -66,7 +105,7 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 10,
     borderRadius: 10,
-    height: windowHeight * 0.25,
+    flex: 0.3,
   },
   cardText: {
     color: 'white',
@@ -74,6 +113,8 @@ const styles = StyleSheet.create({
   },
   headerText: {
     color: 'white',
-    fontSize: 30,
+    fontSize: 50,
+    fontStyle: 'italic',
+    fontWeight: 'bold',
   },
 });
