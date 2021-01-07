@@ -3,12 +3,12 @@ import {
   StyleSheet,
   Text,
   View,
-  Dimensions,
   SafeAreaView,
   ScrollView,
   ActivityIndicator,
   Modal,
   TouchableOpacity,
+  RefreshControl,
 } from 'react-native';
 import database from '@react-native-firebase/database';
 import {Picker} from '@react-native-picker/picker';
@@ -20,16 +20,14 @@ import Colors from '../Utils/Colors';
 import Filter from '../Components/icons/Filter';
 import {AuthContext} from '../Navigations/AuthProvider';
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-
 const Orders = ({navigation}) => {
-  const [orderList, setOrderList] = React.useState();
+  const [orderList, setOrderList] = React.useState([]);
   const {user} = React.useContext(AuthContext);
   const [selectedCities, setSelectedCities] = React.useState('İl seçiniz');
   const [selectedTown, setSelectedTown] = React.useState('İlçe seçiniz');
   const [isAdressChange, setIsAdressChange] = React.useState(true);
   const [townList, setTownList] = React.useState([]);
+  const [refresh, setRefresh] = React.useState(false);
 
   const changeTownList = (itemValue) => {
     setSelectedCities(itemValue);
@@ -47,6 +45,17 @@ const Orders = ({navigation}) => {
       }
     });
   };
+  const refreshOrders = async () => {
+    setRefresh(true);
+    database()
+      .ref(`/orders/${selectedCities}/${selectedTown}/`)
+      .once('value')
+      .then((snapshot) => {
+        setOrderList([]);
+        setOrderList(Object.values(snapshot.val()));
+      });
+    setRefresh(false);
+  };
   return (
     <View as={SafeAreaView} style={styles.container}>
       <View style={styles.header}>
@@ -63,40 +72,38 @@ const Orders = ({navigation}) => {
           <Filter stroke="white" />
         </TouchableOpacity>
       </View>
-      {orderList ? (
-        <ScrollView style={styles.ordersList}>
-          {orderList.length > 0 ? (
-            orderList.map((order) => (
-              <OrderCard
-                userName={order.fullName}
-                mahalle={order.city}
-                ilce={order.town}
-                orderWeight={order.totalWeight}
-                price={order.orderPrice}
-                onPress={() =>
-                  navigation.navigate('OrderDetails', {data: order})
-                }
-              />
-            ))
-          ) : (
-            <View
-              style={[
-                styles.ordersList,
-                {alignItems: 'center', justifyContent: 'center'},
-              ]}>
-              <Text>Bu adreste sipariş bulunamadı</Text>
-            </View>
-          )}
-        </ScrollView>
-      ) : (
-        <View
-          style={[
-            styles.ordersList,
-            {alignItems: 'center', justifyContent: 'center'},
-          ]}>
-          <ActivityIndicator color="black" />
-        </View>
-      )}
+      <ScrollView
+        style={styles.ordersList}
+        refreshControl={
+          <RefreshControl refreshing={refresh} onRefresh={refreshOrders} />
+        }>
+        {orderList.length > 0 ? (
+          orderList.map(
+            (order) =>
+              order.userId != user.uid &&
+              order.orderStatus == 1 && (
+                <OrderCard
+                  userName={order.fullName}
+                  mahalle={order.city}
+                  ilce={order.town}
+                  orderWeight={order.totalWeight}
+                  price={order.orderPrice}
+                  onPress={() =>
+                    navigation.navigate('OrderDetails', {data: order})
+                  }
+                />
+              ),
+          )
+        ) : (
+          <View
+            style={[
+              styles.ordersList,
+              {alignItems: 'center', justifyContent: 'center'},
+            ]}>
+            <Text>Bu adreste sipariş bulunamadı</Text>
+          </View>
+        )}
+      </ScrollView>
       <Modal animationType="slide" transparent={true} visible={isAdressChange}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
@@ -148,7 +155,7 @@ const Orders = ({navigation}) => {
                       .ref(`/orders/${selectedCities}/${selectedTown}/`)
                       .once('value')
                       .then((snapshot) => {
-                        setOrderList();
+                        setOrderList([]);
                         setOrderList(Object.values(snapshot.val()));
                       });
                     setIsAdressChange(!isAdressChange);
