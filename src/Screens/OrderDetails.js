@@ -7,12 +7,79 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import ProductCard from '../Components/ProductCard';
+import {AuthContext} from '../Navigations/AuthProvider';
 import Colors from '../Utils/Colors';
+import database from '@react-native-firebase/database';
 
-const OrderDetails = ({route}) => {
+const OrderDetails = ({route, navigation}) => {
   const {data} = route.params;
+  const {user} = React.useContext(AuthContext);
+  const [fromUser, setFromUser] = React.useState();
+
+  React.useEffect(() => {
+    database()
+      .ref(`/users/${data.userId}/`)
+      .once('value')
+      .then((snapshot) => {
+        setFromUser(snapshot.val());
+      });
+  }, []);
+  const getOrder = () => {
+    Alert.alert(
+      'Emin misin?',
+      'Siparişi gerçekten almak istiyor musun?',
+      [
+        {
+          text: 'Hayır',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'Evet',
+          onPress: () => {
+            database()
+              .ref(`/userOrders/${data.userId}/${data.token}/`)
+              .update({
+                orderStatus: (parseInt(data.orderStatus) + 1).toString(),
+                courierId: user.uid,
+              })
+              .then(() => console.log('Data updated.'));
+            database()
+              .ref(`/userOrders/${user.uid}/${data.token}/`)
+              .set({
+                userId: data.userId,
+                orderToken: data.token,
+                orderData: data.orderData,
+                city: data.city,
+                town: data.town,
+                address: data.address,
+                orderPrice: data.orderPrice,
+                totalWeight: data.totalWeight,
+                orderStatus: (parseInt(data.orderStatus) + 1).toString(),
+                courierId: user.uid,
+                orderInfo: data.orderInfo,
+                fullName: fromUser.name + ' ' + fromUser.surname,
+              });
+            database()
+              .ref(`/orders/${data.city}/${data.town}/${data.token}/`)
+              .remove();
+            database().ref(`/users/${user.uid}/`).update({
+              isWork: true,
+            });
+            Alert.alert(
+              'Başarılı',
+              'Siparişi başarıyla kabul ettiniz. Ana sayfaya yönlendiriyorsunuz ...',
+            );
+            navigation.navigate('Home');
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -58,7 +125,7 @@ const OrderDetails = ({route}) => {
           </ScrollView>
         </View>
       </ScrollView>
-      <TouchableOpacity style={styles.confirmOrder}>
+      <TouchableOpacity style={styles.confirmOrder} onPress={() => getOrder()}>
         <Text style={{color: 'white', fontWeight: 'bold'}}>Siparişi Getir</Text>
       </TouchableOpacity>
     </SafeAreaView>
