@@ -17,6 +17,13 @@ import Colors from '../Utils/Colors';
 const MyCourierDetails = ({route, navigation}) => {
   const {data} = route.params;
   const {user} = React.useContext(AuthContext);
+  const [customer, setCustomer] = React.useState();
+  database()
+    .ref(`/users/${data.userId}/`)
+    .once('value')
+    .then((snapshot) => {
+      setCustomer(snapshot.val());
+    });
   const confirmSure = () =>
     Alert.alert(
       'Emin misin?',
@@ -64,17 +71,34 @@ const MyCourierDetails = ({route, navigation}) => {
             flex: 0.3,
           }}>
           <View style={styles.detailsHeader}>
-            <Text style={{flex: 0.5, fontSize: 20, color: 'white'}}>Alıcı</Text>
+            <Text style={{flex: 0.5, fontSize: 15, color: 'white'}}>Alıcı</Text>
             <Text
               style={{
                 flex: 0.5,
-                fontSize: 20,
+                fontSize: 15,
                 color: 'white',
                 textAlign: 'center',
               }}>
               {data.fullName}
             </Text>
           </View>
+          {customer && (
+            <View style={styles.detailsHeader}>
+              <Text style={{flex: 0.5, fontSize: 15, color: 'white'}}>
+                Telefon Numarası
+              </Text>
+              <Text
+                style={{
+                  flex: 0.5,
+                  fontSize: 15,
+                  color: 'white',
+                  textAlign: 'center',
+                }}>
+                {customer.phoneNumber}
+              </Text>
+            </View>
+          )}
+
           <StatusIndicator position={data.orderStatus} />
         </View>
 
