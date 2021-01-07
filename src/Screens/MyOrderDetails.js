@@ -14,15 +14,15 @@ import StatusIndicator from '../Components/StatusIndicator';
 import {AuthContext} from '../Navigations/AuthProvider';
 import Colors from '../Utils/Colors';
 
-const MyOrderDetails = ({route}) => {
+const MyOrderDetails = ({route, navigation}) => {
   const {data} = route.params;
   const {user} = React.useContext(AuthContext);
-  const [courierName, setCourierName] = React.useState();
+  const [courier, setCourier] = React.useState();
   database()
     .ref(`/users/${data.courierId}/`)
     .once('value')
     .then((snapshot) => {
-      setCourierName(snapshot.val().name + ' ' + snapshot.val().surname);
+      setCourier(snapshot.val());
     });
   const confirmSure = () =>
     Alert.alert(
@@ -60,6 +60,28 @@ const MyOrderDetails = ({route}) => {
       {cancelable: false},
     );
 
+  const orderCancel = () => {
+    Alert.alert('Emin misin?', 'Siparişi silmek istiyor musun?', [
+      {
+        text: 'Hayır',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'Evet',
+        onPress: () => {
+          database()
+            .ref(`/userOrders/${user.uid}/${data.orderToken}/`)
+            .remove();
+          database()
+            .ref(`/orders/${data.city}/${data.town}/${data.orderToken}`)
+            .remove();
+          navigation.navigate('MyOrders');
+        },
+      },
+    ]);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -75,21 +97,37 @@ const MyOrderDetails = ({route}) => {
             borderRadius: 10,
             flex: 0.3,
           }}>
-          {courierName && (
-            <View style={styles.detailsHeader}>
-              <Text style={{flex: 0.5, fontSize: 15, color: 'white'}}>
-                Kurye Adı :
-              </Text>
-              <Text
-                style={{
-                  flex: 0.5,
-                  fontSize: 15,
-                  color: 'white',
-                  textAlign: 'center',
-                }}>
-                {courierName && courierName}
-              </Text>
-            </View>
+          {courier && (
+            <>
+              <View style={styles.detailsHeader}>
+                <Text style={{flex: 0.5, fontSize: 15, color: 'white'}}>
+                  Kurye Adı :
+                </Text>
+                <Text
+                  style={{
+                    flex: 0.5,
+                    fontSize: 15,
+                    color: 'white',
+                    textAlign: 'center',
+                  }}>
+                  {courier.name + ' ' + courier.surname}
+                </Text>
+              </View>
+              <View style={styles.detailsHeader}>
+                <Text style={{flex: 0.5, fontSize: 15, color: 'white'}}>
+                  Kurye Telefon No :
+                </Text>
+                <Text
+                  style={{
+                    flex: 0.5,
+                    fontSize: 15,
+                    color: 'white',
+                    textAlign: 'center',
+                  }}>
+                  {courier.phoneNumber}
+                </Text>
+              </View>
+            </>
           )}
 
           <StatusIndicator position={data.orderStatus} />
@@ -152,6 +190,13 @@ const MyOrderDetails = ({route}) => {
           <Text style={{color: 'white'}}>Siparişin Geldigini Onayla</Text>
         </TouchableOpacity>
       )}
+      {parseInt(data.orderStatus) == 1 && (
+        <TouchableOpacity
+          style={styles.orderCancel}
+          onPress={() => orderCancel()}>
+          <Text style={{color: 'white'}}>Siparişi İptal Et</Text>
+        </TouchableOpacity>
+      )}
     </SafeAreaView>
   );
 };
@@ -201,5 +246,14 @@ const styles = StyleSheet.create({
     padding: 10,
     flex: 0.05,
     marginVertical: 5,
+  },
+  orderCancel: {
+    backgroundColor: 'red',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    padding: 10,
+    flex: 0.05,
+    margin: 5,
   },
 });
