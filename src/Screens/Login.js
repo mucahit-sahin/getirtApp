@@ -7,7 +7,9 @@ import {
   TextInput,
   TouchableOpacity,
   Button,
+  Image,
 } from 'react-native';
+import Colors from '../Utils/Colors';
 import {AuthContext} from '../Navigations/AuthProvider';
 
 const width = Dimensions.get('window').width;
@@ -17,11 +19,24 @@ const Login = ({navigation}) => {
   const [password, setPassword] = React.useState(null);
 
   const {login} = React.useContext(AuthContext);
-
+  const signin = () => {
+    if (!email.trim() || !password.trim()) {
+      Alert.alert('Hata', 'Lütfen alanları boş bırakmayın.', [{text: 'OK'}], {
+        cancelable: false,
+      });
+    } else {
+      login(email, password);
+    }
+  };
   return (
     <View style={styles.container}>
       <View style={styles.container}>
-        <View></View>
+        <View>
+          <Image
+            style={{width: 100, height: 100}}
+            source={require('../Assets/logo.png')}
+          />
+        </View>
         <View>
           <TextInput
             style={styles.text}
@@ -40,7 +55,7 @@ const Login = ({navigation}) => {
             <Text style={styles.forgetText}>Şifremi Unuttum</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={() => login(email, password)}>
+        <TouchableOpacity onPress={() => signin()}>
           <View style={styles.login}>
             <Text style={styles.loginText}>Giriş Yap</Text>
           </View>
@@ -64,7 +79,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#b7fdf8',
+    backgroundColor: Colors.yesil,
   },
   text: {
     width: width - 40,

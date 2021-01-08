@@ -10,6 +10,7 @@ import {
   Modal,
   TextInput,
   Alert,
+  ScrollView,
 } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import database from '@react-native-firebase/database';
@@ -73,7 +74,7 @@ const Profile = () => {
           <Logout color="white" />
         </TouchableOpacity>
       </View>
-      <View style={styles.aboutView}>
+      <ScrollView style={styles.aboutView}>
         <View style={styles.aboutViewRow}>
           <Text style={{fontSize: 20}}>
             <Text style={{fontWeight: 'bold'}}>Ad: </Text>
@@ -114,12 +115,12 @@ const Profile = () => {
             {userData ? userData.address : <ActivityIndicator color="black" />}
           </Text>
         </View>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => setIsAdressChange(true)}>
-          <Text style={styles.buttonText}>Adres Güncelle</Text>
-        </TouchableOpacity>
-      </View>
+      </ScrollView>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => setIsAdressChange(true)}>
+        <Text style={styles.buttonText}>Adres Güncelle</Text>
+      </TouchableOpacity>
       <Modal
         animationType="slide"
         transparent={true}
@@ -248,18 +249,18 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomStartRadius: 30,
     borderBottomEndRadius: 30,
-    flex: 0.15,
+    flex: 0.2,
   },
   profileImage: {
-    width: windowWidth / 5,
-    height: windowWidth / 5,
+    width: '20%',
+    height: '100%',
     borderRadius: windowWidth / 10,
   },
   displayName: {justifyContent: 'center', marginLeft: 10},
   displayNameText: {fontWeight: 'bold', color: 'white', fontSize: 24},
   logout: {position: 'absolute', right: 10, top: 10},
   aboutView: {
-    flex: 0.85,
+    flex: 0.7,
     margin: 10,
     borderRadius: 10,
     borderColor: '#d0d2d3',
@@ -279,11 +280,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     alignItems: 'center',
-    margin: 10,
-    position: 'absolute',
-    bottom: 10,
-    left: 5,
-    right: 5,
+    marginVertical: 5,
+    marginHorizontal: 10,
   },
   buttonText: {
     color: 'white',
