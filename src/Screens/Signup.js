@@ -6,8 +6,10 @@ import {
   TextInput,
   View,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import {AuthContext} from '../Navigations/AuthProvider';
+import Colors from '../Utils/Colors';
 
 const width = Dimensions.get('window').width;
 
@@ -18,9 +20,27 @@ const Signup = ({navigation}) => {
 
   const {register} = React.useContext(AuthContext);
 
+  const signup = () => {
+    if (!email.trim() || !password.trim() || !confirmPassword.trim()) {
+      Alert.alert('Hata', 'Lütfen alanları boş bırakmayın.', [{text: 'OK'}], {
+        cancelable: false,
+      });
+    } else if (password != confirmPassword) {
+      Alert.alert('Hata', 'Şifreler birbiriyle uyuşmuyor!', [{text: 'OK'}], {
+        cancelable: false,
+      });
+    } else {
+      register(email, password);
+    }
+  };
   return (
     <View style={styles.container}>
-      <View></View>
+      <View>
+        <Image
+          style={{width: 100, height: 100}}
+          source={require('../Assets/logo.png')}
+        />
+      </View>
       <View>
         <TextInput
           style={styles.text}
@@ -41,7 +61,7 @@ const Signup = ({navigation}) => {
           }
           secureTextEntry={true}
         />
-        <TouchableOpacity onPress={() => register(email, password)}>
+        <TouchableOpacity onPress={() => signup()}>
           <View style={styles.signup}>
             <Text style={styles.signupText}>Üye Ol</Text>
           </View>
@@ -65,7 +85,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#b7fdf8',
+    backgroundColor: Colors.yesil,
   },
   text: {
     width: width - 40,
