@@ -53,6 +53,7 @@ const UserDetailsForm = ({navigation}) => {
           city: selectedCities,
           town: selectedTown,
           address: address,
+          rating: 5,
         })
         .then(() => setUyari('Profil Tamamlandı'));
       navigation.navigate('Home');

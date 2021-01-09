@@ -8,7 +8,10 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  Modal,
 } from 'react-native';
+import {AirbnbRating} from 'react-native-ratings';
+
 import ProductCard from '../Components/ProductCard';
 import StatusIndicator from '../Components/StatusIndicator';
 import {AuthContext} from '../Navigations/AuthProvider';
@@ -18,12 +21,38 @@ const MyOrderDetails = ({route, navigation}) => {
   const {data} = route.params;
   const {user} = React.useContext(AuthContext);
   const [courier, setCourier] = React.useState();
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const [rating, setRating] = React.useState();
   database()
     .ref(`/users/${data.courierId}/`)
     .once('value')
     .then((snapshot) => {
       setCourier(snapshot.val());
     });
+  const scoring = () => {
+    database()
+      .ref(`/users/${data.courierId}/rating`)
+      .once('value')
+      .then((snapshot) => {
+        database()
+          .ref(`/users/${data.courierId}/`)
+          .update({
+            rating: (snapshot.val() + rating) / 2,
+          });
+        database()
+          .ref(`/userOrders/${data.courierId}/${data.orderToken}/`)
+          .update({
+            rating: (snapshot.val() + rating) / 2,
+          });
+        database()
+          .ref(`/userOrders/${user.uid}/${data.orderToken}/`)
+          .update({
+            rating: (snapshot.val() + rating) / 2,
+          });
+      });
+    setModalVisible(false);
+    navigation.navigate('MyOrders');
+  };
   const confirmSure = () =>
     Alert.alert(
       'Emin misin?',
@@ -51,8 +80,8 @@ const MyOrderDetails = ({route, navigation}) => {
               database().ref(`/users/${data.courierId}/`).update({
                 isWork: false,
               });
-
-              Alert.alert('Başarılı', 'Sipariş Başarlı bir şekilde tamamlandı');
+              setModalVisible(true);
+              Alert.alert('Başarılı', 'Sipariş Başarıyla Tamamlandı.');
             }
           },
         },
@@ -197,6 +226,33 @@ const MyOrderDetails = ({route, navigation}) => {
           <Text style={{color: 'white'}}>Siparişi İptal Et</Text>
         </TouchableOpacity>
       )}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text>Hizmetle ilgili puanınız. Kaydırarak seçiniz.</Text>
+            <AirbnbRating
+              count={5}
+              reviews={['Çok Kötü', 'Kötü', 'İdare Eder', 'İyi', 'Çok İyi']}
+              defaultRating={3}
+              size={50}
+              onFinishRating={(value) => setRating(value)}
+            />
+            <View style={{flexDirection: 'row'}}>
+              <TouchableOpacity
+                style={styles.ratingButton}
+                onPress={() => scoring()}>
+                <Text>Puanı Onayla</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -255,5 +311,35 @@ const styles = StyleSheet.create({
     padding: 10,
     flex: 0.05,
     margin: 5,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(100,100,100, 0.5)',
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  ratingButton: {
+    marginTop: 10,
+    backgroundColor: '#2196F3',
+    borderRadius: 20,
+    padding: 10,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
