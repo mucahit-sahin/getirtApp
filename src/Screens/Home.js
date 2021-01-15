@@ -52,7 +52,7 @@ const Home = ({navigation}) => {
               }
             });
         }}>
-        <KuryeIcon width={100} />
+        <KuryeIcon height="100%" width="25%" />
         <Text style={styles.cardText}>Biraz para kazanmaya ne dersin?</Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -69,7 +69,7 @@ const Home = ({navigation}) => {
               }
             });
         }}>
-        <SiparisIcon width={100} />
+        <SiparisIcon height="100%" width="25%" />
         <Text style={styles.cardText}>Sipariş mi vermek istiyorsun?</Text>
       </TouchableOpacity>
     </View>

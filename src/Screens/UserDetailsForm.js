@@ -3,15 +3,12 @@ import {
   StyleSheet,
   Text,
   View,
-  Dimensions,
   TextInput,
-  KeyboardAvoidingView,
-  TouchableWithoutFeedback,
-  Keyboard,
   ActivityIndicator,
+  ScrollView,
+  TouchableOpacity,
 } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import database from '@react-native-firebase/database';
 
 import Colors from '../Utils/Colors';
@@ -118,7 +115,7 @@ const UserDetailsForm = ({navigation}) => {
             ))}
           </Picker>
         </View>
-        {selectedCities !== 'İl seçiniz' ? (
+        {selectedCities !== 'İl seçiniz' && (
           <View style={styles.formRow}>
             <Text style={styles.label}>İlçe:</Text>
             <Picker
@@ -130,8 +127,6 @@ const UserDetailsForm = ({navigation}) => {
               ))}
             </Picker>
           </View>
-        ) : (
-          <ActivityIndicator color="black" />
         )}
         {selectedTown !== 'İlçe seçiniz' && (
           <View style={styles.formRow}>

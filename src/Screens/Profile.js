@@ -20,6 +20,7 @@ import Logout from '../Components/icons/Logout';
 import {AuthContext} from '../Navigations/AuthProvider';
 import citiesData from '../Data/iller.json';
 import townData from '../Data/ilceler.json';
+import User from '../Components/icons/User';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -63,10 +64,7 @@ const Profile = () => {
   return (
     <View style={styles.container}>
       <View style={styles.profileImageView}>
-        <Image
-          style={styles.profileImage}
-          source={require('../Assets/user.png')}
-        />
+        <User height="100%" width="25%" color="white" />
         <View style={styles.displayName}>
           <Text style={styles.displayNameText}>{user.email}</Text>
         </View>
@@ -252,9 +250,8 @@ const styles = StyleSheet.create({
     flex: 0.2,
   },
   profileImage: {
-    width: '20%',
+    width: '25%',
     height: '100%',
-    borderRadius: windowWidth / 10,
   },
   displayName: {justifyContent: 'center', marginLeft: 10},
   displayNameText: {fontWeight: 'bold', color: 'white', fontSize: 24},
